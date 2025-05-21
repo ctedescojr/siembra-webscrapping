@@ -36,16 +36,7 @@ source venv/bin/activate
 
 ### 3. Instale as dependências
 
-Crie um arquivo `requirements.txt` com o seguinte conteúdo:
-
-```txt
-selenium
-beautifulsoup4
-pandas
-openpyxl
-```
-
-E então instale:
+Instale:
 
 ```bash
 pip install -r requirements.txt
