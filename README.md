@@ -65,7 +65,7 @@ pip install -r requirements.txt
 ### 5. Execute o script
 
 ```bash
-python web_scraping_loja.py
+python dimensional.py
 ```
 
 ---
