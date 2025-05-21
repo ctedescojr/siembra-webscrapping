@@ -6,6 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 import pandas as pd
 import time
+from datetime import datetime
 
 # Caminho para o ChromeDriver
 service = Service("C:/DEV/B+P/Siembra/chromedriver-win64/chromedriver.exe")
@@ -81,6 +82,10 @@ dados = pd.DataFrame({"Produto": produtos, "Preço": precos})
 # Exibindo os dados coletados
 print(dados)
 
+# Gerar nome de arquivo com a data atual
+data_hoje = datetime.today().strftime("%Y-%m-%d")
+nome_arquivo = f"dimensional_{data_hoje}.xlsx"
+
 # Salvando em Excel
-dados.to_excel("produtos_precos2.xlsx", index=False)
-print("Dados salvos em produtos_precos2.xlsx")
+dados.to_excel(nome_arquivo, index=False)
+print(f"Dados salvos em {nome_arquivo}")
