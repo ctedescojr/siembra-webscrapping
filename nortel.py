@@ -30,13 +30,18 @@ chrome_options = Options()
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
 chrome_options.add_argument(
-    "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36"
+    "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36"
 )
 chrome_options.add_argument("--start-maximized")
 
 # --- Base URL and Parameters ---
 base_url = "https://shop.nortel.com.br/produtos"
-url_params = "text=&categories=&brands=&pdmsModifiers=&pdmsParticulars=&type=&order=relevance&isFilterUpdate=1&minPrice=&maxPrice=&limit=16&greenIndicators="
+url_params = (
+    "text=&categories=&brands=&pdmsModifiers="
+    "&pdmsParticulars=&type=&order=relevance&isFilterUpdate=1"
+    "&minPrice=&maxPrice=&limit=16&greenIndicators="
+)
 
 # --- Initialize WebDriver ---
 driver = webdriver.Chrome(service=service, options=chrome_options)
@@ -100,7 +105,8 @@ def handle_login(driver_instance, wait_instance, long_wait_instance, email, pass
 
     except TimeoutException:
         print(
-            "Login pop-up was not detected initially, or it did not disappear after the manual login period. Proceeding...",
+            "Login pop-up was not detected initially, "
+            "or it did not disappear after the manual login period. Proceeding...",
             flush=True,
         )
     except Exception as e:
@@ -149,7 +155,8 @@ try:
             time.sleep(2)
         except TimeoutException:
             print(
-                "Error: Could not confirm navigation to product list after login. Page might not have loaded correctly.",
+                "Error: Could not confirm navigation to product list after login. "
+                "Page might not have loaded correctly.",
                 flush=True,
             )
             # driver.quit() # Optional: exit if this critical step fails
@@ -173,7 +180,10 @@ try:
 
         # Check if a "break" (...) element exists and is before the presumed last page number
         break_element_xpath = f"{pagination_ul_xpath}/li[contains(@class, 'break')]"
-        last_page_number_candidate_xpath = f"{pagination_ul_xpath}/li[position() = last()-1]/a"  # Link in 2nd to last li
+        # Link in 2nd to last li
+        last_page_number_candidate_xpath = (
+            f"{pagination_ul_xpath}/li[position() = last()-1]/a"
+        )
 
         try:
             last_page_link_element = wait.until(
@@ -215,7 +225,8 @@ try:
 
         except Exception as e_strat1:
             print(
-                f"Strategy 1 (second-to-last link) for total pages failed: {e_strat1}. Trying Strategy 2 (scan all page links).",
+                f"Strategy 1 (second-to-last link) for total pages failed: {e_strat1}. "
+                "Trying Strategy 2 (scan all page links).",
                 flush=True,
             )
             # Strategy 2: Scan all displayed page number links and find the maximum.
@@ -232,8 +243,9 @@ try:
                         num_str = aria_label.replace("Page ", "").split(" ")[0]
                         if num_str.isdigit():
                             max_page_found = max(max_page_found, int(num_str))
-                    except:
+                    except (ValueError, AttributeError):
                         pass  # Ignore if parsing fails for an element
+
                 if max_page_found > 0:
                     total_pages = max_page_found
                     print(
@@ -270,10 +282,11 @@ try:
                 len(pagination_li_elements) > 3
             ):  # e.g., "Prev, 1, Next" is 3. More than 3 implies multiple pages were listed.
                 print(
-                    "WARNING: Total pages is 1, but the pagination bar seems to show multiple page elements. Page detection might be inaccurate.",
+                    "WARNING: Total pages is 1, but the pagination bar seems to show multiple page elements. "
+                    "Page detection might be inaccurate.",
                     flush=True,
                 )
-        except:
+        except Exception:
             pass  # Ignore if this check itself fails
 
     print(f"Final total pages to be used for scraping: {total_pages}", flush=True)
@@ -283,7 +296,8 @@ try:
     actual_pages_to_scrape = min(max_pages_to_scrape, total_pages)
     if total_pages > max_pages_to_scrape:
         print(
-            f"NOTE: Total pages found is {total_pages}, but script is limited to scrape only {max_pages_to_scrape} pages for testing.",
+            f"NOTE: Total pages found is {total_pages}, "
+            "but script is limited to scrape only {max_pages_to_scrape} pages for testing.",
             flush=True,
         )
     print(f"Will attempt to scrape {actual_pages_to_scrape} pages.", flush=True)

@@ -31,7 +31,7 @@ class TextRedirector:
 class ScriptRunnerGUI:
     def __init__(self, master):
         self.master = master
-        master.title("Script Runner")
+        master.title("SIEMBRA - Webscrapping")
 
         self.log_file_handle = None
         self.output_queue = queue.Queue()  # Initialize the queue
@@ -46,14 +46,14 @@ class ScriptRunnerGUI:
 
         self.dimensional_button = tk.Button(
             button_frame,
-            text="Run dimensional.py",
+            text="Dimensional",
             command=lambda: self.run_script("dimensional.py"),
         )
         self.dimensional_button.pack(side=tk.LEFT, padx=5)
 
         self.nortel_button = tk.Button(
             button_frame,
-            text="Run nortel.py",
+            text="Nortel",
             command=lambda: self.run_script("nortel.py"),
         )
         self.nortel_button.pack(side=tk.LEFT, padx=5)
@@ -169,7 +169,7 @@ class ScriptRunnerGUI:
 
 def main():
     root = tk.Tk()
-    app = ScriptRunnerGUI(root)
+    root.app = ScriptRunnerGUI(root)
     root.mainloop()
 
 

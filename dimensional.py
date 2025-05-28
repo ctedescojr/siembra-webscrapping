@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException
 from bs4 import BeautifulSoup
 import pandas as pd
 import time
@@ -58,9 +58,10 @@ while True:
         pagina += 1
         tentativas_sem_novos = 0  # Reseta para o próximo loop interno
         time.sleep(5)
-    except:
+    except NoSuchElementException:
         print("Nenhum botão 'Mostrar mais' encontrado. Finalizando.", flush=True)
         break
+
 
 print(f"Total de páginas carregadas: {pagina}", flush=True)
 
