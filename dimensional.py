@@ -42,24 +42,27 @@ while True:
             tentativas_sem_novos = 0
 
         produtos_anteriores = produtos_atual
-        print(f"Produtos carregados até agora: {produtos_atual}")
+        print(f"Produtos carregados até agora: {produtos_atual}", flush=True)
 
     # Verifica se o botão "Mostrar mais" está presente
     try:
-        print("Achando botão 'Mostrar mais'...")
+        print("Achando botão 'Mostrar mais'...", flush=True)
         botao_mostrar_mais = driver.find_element(
             By.XPATH, "//div[contains(text(), 'Mostrar mais')]"
         )
         botao_mostrar_mais.click()
-        print(f"[Clique] Página {pagina} carregada, carregando mais produtos...")
+        print(
+            f"[Clique] Página {pagina} carregada, carregando mais produtos...",
+            flush=True,
+        )
         pagina += 1
         tentativas_sem_novos = 0  # Reseta para o próximo loop interno
         time.sleep(5)
     except:
-        print("Nenhum botão 'Mostrar mais' encontrado. Finalizando.")
+        print("Nenhum botão 'Mostrar mais' encontrado. Finalizando.", flush=True)
         break
 
-print(f"Total de páginas carregadas: {pagina}")
+print(f"Total de páginas carregadas: {pagina}", flush=True)
 
 # Coleta do HTML final
 soup = BeautifulSoup(driver.page_source, "html.parser")
@@ -88,4 +91,4 @@ nome_arquivo = f"dimensional_{data_hoje}.xlsx"
 
 # Salvando em Excel
 dados.to_excel(nome_arquivo, index=False)
-print(f"Dados salvos em {nome_arquivo}")
+print(f"Dados salvos em {nome_arquivo}", flush=True)
