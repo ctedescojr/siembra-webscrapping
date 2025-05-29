@@ -139,7 +139,7 @@ This project is free to use for educational and professional purposes. Please ch
 <a name="portugues"></a>
 # Web Scraping - Lojas Dimensional e Nortel (Versão Portuguesa)
 
-Este projeto realiza um web scraping da loja [Dimensional](https://www.dimensional.com.br/material-eletrico) e [Nortel] (https://www.nortel.com.br) capturando todos os **nomes de produtos** e **preços** da seção de materiais elétricos, mesmo com carregamento dinâmico e rolagem infinita.
+Este projeto realiza um web scraping da loja [Dimensional](https://www.dimensional.com.br/material-eletrico) e [Nortel](https://www.nortel.com.br) capturando todos os **nomes de produtos** e **preços** da seção de materiais elétricos, mesmo com carregamento dinâmico e rolagem infinita.
 
 O resultado é salvo em um arquivo Excel com o nome `dimensional/nortel_YYYY-MM-DD.xlsx`, representando a data da extração.
 
