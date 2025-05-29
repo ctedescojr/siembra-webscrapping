@@ -110,10 +110,10 @@ Execute o seguinte comando no diretório raiz do projeto:
 
 ```bash
 pyinstaller --onefile ^
-    --add-data "chromedriver-win64/chromedriver.exe;chromedriver-win64/" ^
-    --add-data "resource/img/favicon.ico;resource/img/" ^
-    --windowed ^
-    --icon="resource/img/exe_icon.ico" ^
+    --add-data "chromedriver-win64/chromedriver.exe;chromedriver-win64/"
+    --add-data "resource/img/favicon.ico;resource/img/"
+    --windowed
+    --icon="resource/img/exe_icon.ico"
     script_runner_gui_refactor.py
 ```
 
