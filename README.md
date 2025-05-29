@@ -58,7 +58,7 @@ pip install -r requirements.txt
 ```bash
 python dimensional.py
 ```
-# Ou
+Ou
 
 ```bash
 python nortel.py
