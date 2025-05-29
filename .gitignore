@@ -2,3 +2,6 @@ dimensional.html
 **/venv
 *.xlsx
 *.txt
+/chromedriver-win64
+/dist
+/build

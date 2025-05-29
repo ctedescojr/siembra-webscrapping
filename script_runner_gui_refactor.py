@@ -1,11 +1,14 @@
 import tkinter as tk
 from tkinter import scrolledtext
-import subprocess
 import threading
 import os
 import sys
 import queue
 from datetime import datetime
+
+# Import the refactored scripts
+from nortel_refactor import run_nortel_scraper
+from dimensional_refactor import run_dimensional_scraper
 
 
 def resource_path(relative_path):
@@ -43,6 +46,8 @@ class ScriptRunnerGUI:
         self.master = master
         master.title("SIEMBRA - Webscrapping")
 
+        self.master.iconbitmap(resource_path("resource/img/favicon.ico"))
+
         self.log_file_handle = None
         self.output_queue = queue.Queue()  # Initialize the queue
 
@@ -57,14 +62,14 @@ class ScriptRunnerGUI:
         self.dimensional_button = tk.Button(
             button_frame,
             text="Dimensional",
-            command=lambda: self.run_script("dimensional.py"),
+            command=lambda: self.run_script("dimensional"),  # Pass module name
         )
         self.dimensional_button.pack(side=tk.LEFT, padx=5)
 
         self.nortel_button = tk.Button(
             button_frame,
             text="Nortel",
-            command=lambda: self.run_script("nortel.py"),
+            command=lambda: self.run_script("nortel"),  # Pass module name
         )
         self.nortel_button.pack(side=tk.LEFT, padx=5)
 
@@ -75,15 +80,15 @@ class ScriptRunnerGUI:
         self.output_text.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
         self.output_text.config(state=tk.DISABLED)  # Make it read-only
 
-    def run_script(self, script_name):
+    def run_script(self, script_module_name):
         self.output_text.config(state=tk.NORMAL)
         self.output_text.delete(1.0, tk.END)
-        self.output_text.insert(tk.END, f"Running {script_name}...\n")
+        self.output_text.insert(tk.END, f"Running {script_module_name} scraper...\n")
         self.output_text.config(state=tk.DISABLED)
 
         # Generate log file name
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        log_filename = f"{os.path.splitext(script_name)[0]}_log_{timestamp}.txt"
+        log_filename = f"{script_module_name}_log_{timestamp}.txt"
         log_filepath = os.path.join(os.getcwd(), log_filename)
 
         try:
@@ -97,7 +102,8 @@ class ScriptRunnerGUI:
 
             # Run script in a separate thread to keep GUI responsive
             thread = threading.Thread(
-                target=self._execute_script, args=(script_name, log_filepath)
+                target=self._execute_refactored_script,
+                args=(script_module_name, log_filepath),
             )
             thread.daemon = True  # Allow the thread to exit with the main program
             thread.start()
@@ -111,51 +117,32 @@ class ScriptRunnerGUI:
                 self.log_file_handle = None
             self._reset_stdout_stderr()
 
-    def _execute_script(self, script_name, log_filepath):
+    def _execute_refactored_script(self, script_module_name, log_filepath):
         try:
-            # Get the base path for resources from the main GUI process
-            # This is crucial for child processes to find bundled files
-            env = os.environ.copy()  # Create a copy of the current environment
+            # Set MEIPASS_PARENT for child processes if needed (though now it's same process)
+            # This is technically not needed if we are importing directly, but good for consistency
             if hasattr(sys, "_MEIPASS"):
-                env["MEIPASS_PARENT"] = sys._MEIPASS  # Pass the parent's _MEIPASS
-            # else: if not frozen, no special MEIPASS is needed, os.getcwd() will work
+                os.environ["MEIPASS_PARENT"] = sys._MEIPASS
 
-            script_full_path = resource_path(
-                script_name
-            )  # Use the existing resource_path function
-
-            process = subprocess.Popen(
-                [sys.executable, script_full_path],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                bufsize=1,
-                universal_newlines=True,
-                env=env,  # Pass the modified environment to the subprocess
-            )
-
-            # Read stdout and stderr in real-time
-            for line in iter(process.stdout.readline, ""):
-                sys.stdout.write(line)
-            for line in iter(process.stderr.readline, ""):
-                sys.stderr.write(line)
-
-            process.wait()  # Wait for the process to finish
+            if script_module_name == "dimensional":
+                run_dimensional_scraper()
+            elif script_module_name == "nortel":
+                run_nortel_scraper()
+            else:
+                self.output_text.config(state=tk.NORMAL)
+                self.output_text.insert(
+                    tk.END, f"Error: Unknown script module '{script_module_name}'.\n"
+                )
+                self.output_text.config(state=tk.DISABLED)
+                return
 
             self.output_text.config(state=tk.NORMAL)
             self.output_text.insert(
                 tk.END,
-                f"\n--- {script_name} finished with exit code {process.returncode} ---\n",
+                f"\n--- {script_module_name} scraper finished ---\n",
             )
             self.output_text.config(state=tk.DISABLED)
 
-        except FileNotFoundError:
-            self.output_text.config(state=tk.NORMAL)
-            self.output_text.insert(
-                tk.END,
-                f"Error: Script '{script_name}' not found. Make sure it's in the same directory.\n",
-            )
-            self.output_text.config(state=tk.DISABLED)
         except Exception as e:
             self.output_text.config(state=tk.NORMAL)
             self.output_text.insert(

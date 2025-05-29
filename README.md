@@ -1,14 +1,14 @@
-# Web Scraping - Loja Dimensional
+# Web Scraping - Loja Dimensional e Nortel
 
-Este projeto realiza um web scraping da loja [Dimensional](https://www.dimensional.com.br/material-eletrico), capturando todos os **nomes de produtos** e **preços** da seção de materiais elétricos, mesmo com carregamento dinâmico e rolagem infinita.
+Este projeto realiza um web scraping da loja [Dimensional](https://www.dimensional.com.br/material-eletrico) e [Nortel] (https://www.nortel.com.br) capturando todos os **nomes de produtos** e **preços** da seção de materiais elétricos, mesmo com carregamento dinâmico e rolagem infinita.
 
-O resultado é salvo em um arquivo Excel com o nome `dimensional_YYYY-MM-DD.xlsx`, representando a data da extração.
+O resultado é salvo em um arquivo Excel com o nome `dimensional/nortel_YYYY-MM-DD.xlsx`, representando a data da extração.
 
 ---
 
 ## 🔧 Requisitos
 
-* Python 3.8+
+* Python 3.13.2
 * Google Chrome instalado
 * ChromeDriver compatível com a versão do Chrome
 * Virtualenv (opcional, mas recomendado)
@@ -20,8 +20,8 @@ O resultado é salvo em um arquivo Excel com o nome `dimensional_YYYY-MM-DD.xlsx
 ### 1. Clone o repositório (ou copie os arquivos para sua máquina)
 
 ```bash
-git clone https://github.com/seu-usuario/webscraping-dimensional.git
-cd webscraping-dimensional
+git clone https://github.com/ctedescojr/siembra-webscrapping.git
+cd siembra-webscraping
 ```
 
 ### 2. Crie e ative um ambiente virtual (opcional, mas recomendado)
@@ -58,6 +58,11 @@ pip install -r requirements.txt
 ```bash
 python dimensional.py
 ```
+# Ou
+
+```bash
+python nortel.py
+```
 
 ---
 
@@ -67,7 +72,7 @@ python dimensional.py
 2. Rola a página automaticamente até carregar todos os produtos visíveis.
 3. Clica no botão "Mostrar mais" sempre que estiver disponível.
 4. Extrai o nome e o preço de cada produto encontrado.
-5. Salva os dados em um arquivo `.xlsx` com o nome `dimensional_YYYY-MM-DD.xlsx`.
+5. Salva os dados em um arquivo `.xlsx` com o nome `dimensional/nortel_YYYY-MM-DD.xlsx`.
 
 ---
 
@@ -87,6 +92,47 @@ python dimensional.py
 * Você pode agendar a execução diária do script com o **Task Scheduler (Windows)** ou **cron (Linux/macOS)**.
 
 ---
+
+### 6. Criando um Executável (Windows)
+
+Você pode empacotar a aplicação GUI em um único arquivo executável (`.exe`) para Windows usando PyInstaller.
+
+#### Pré-requisitos:
+*   Certifique-se de ter o PyInstaller instalado:
+    ```bash
+    pip install pyinstaller
+    ```
+*   Tenha os arquivos de ícone `exe_icon.ico` e `favicon.ico` na pasta `resource/img/`.
+
+#### Comando para criar o executável:
+
+Execute o seguinte comando no diretório raiz do projeto:
+
+```bash
+pyinstaller --onefile ^
+    --add-data "chromedriver-win64/chromedriver.exe;chromedriver-win64/" ^
+    --add-data "resource/img/favicon.ico;resource/img/" ^
+    --windowed ^
+    --icon="resource/img/exe_icon.ico" ^
+    script_runner_gui_refactor.py
+```
+
+- `--onefile`: Empacota tudo em um único arquivo `.exe`.
+
+- `--add-data "source;destination"`: Inclui arquivos adicionais.
+
+  - `chromedriver-win64/chromedriver.exe`: O executável do ChromeDriver.
+  - `resource/img/favicon.ico`: O ícone para a janela Tkinter.
+
+- `--windowed`: Impede que uma janela de console preta apareça ao iniciar a GUI.
+
+- `--icon="resource/img/exe_icon.ico"`: Define o ícone do arquivo `.exe` gerado.
+
+- `script_runner_gui_refactor.py`: O script principal da sua aplicação GUI refatorada.
+
+#### Onde encontrar o executável:
+
+Após a execução bem-sucedida, o arquivo `.exe` será gerado na pasta `dist/`. O nome do arquivo será `script_runner_gui_refactor.exe` (ou similar, dependendo da configuração do PyInstaller).
 
 ## 📄 Licença
 

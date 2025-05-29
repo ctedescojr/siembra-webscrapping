@@ -10,16 +10,40 @@ import pandas as pd
 from datetime import datetime
 import random
 
+import sys
+import os
+
+
+def resource_path(relative_path):
+    """Get absolute path to resource, works for dev and for PyInstaller"""
+    # Prioritize the MEIPASS_PARENT environment variable passed from the GUI
+    if "MEIPASS_PARENT" in os.environ:
+        base_path = os.environ["MEIPASS_PARENT"]
+    else:
+        try:
+            # Fallback to current process's _MEIPASS if running as a frozen child directly
+            base_path = sys._MEIPASS
+        except Exception:
+            # Fallback to current working directory for development
+            base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
+
+# Ensure your Service initialization still uses resource_path:
+# service = Service(
+#     executable_path=resource_path("chromedriver-win64/chromedriver.exe")
+# )
+
 # --- USER CREDENTIALS (REPLACE WITH YOUR ACTUAL CREDENTIALS) ---
-USER_EMAIL = "clayton.dtjunior@sp.senai.br"
-USER_PASSWORD = "URPRWVVB!740"
+USER_EMAIL = "YOUR_USERNAME_HERE"
+USER_PASSWORD = "YOUR_PASSWORD_HERE"
 # ---------------------------------------------------------------
 
 # --- Configuration ---
 # Option 1: ChromeDriver in PATH
 # service = Service()
 # Option 2: Specify ChromeDriver path if not in PATH
-# Make sure to replace 'PATH_TO_YOUR_CHROMEDRIVER' with the actual path
+
 service = Service(
     executable_path="C:/DEV/B+P/Siembra/chromedriver-win64/chromedriver.exe"
 )
