@@ -36,7 +36,7 @@ def resource_path(relative_path):
 
 # --- USER CREDENTIALS (REPLACE WITH YOUR ACTUAL CREDENTIALS) ---
 USER_EMAIL = "YOUR_USERNAME_HERE"
-USER_PASSWORD = "YOUR_PASSWORD_HERE"
+USER_PASSWORD = "YOUR_PASSOWORD_HERE"
 # ---------------------------------------------------------------
 
 # --- Configuration ---
@@ -44,9 +44,7 @@ USER_PASSWORD = "YOUR_PASSWORD_HERE"
 # service = Service()
 # Option 2: Specify ChromeDriver path if not in PATH
 
-service = Service(
-    executable_path="C:/DEV/B+P/Siembra/chromedriver-win64/chromedriver.exe"
-)
+service = Service(resource_path("chromedriver-win64/chromedriver.exe"))
 
 chrome_options = Options()
 # Keep headless mode disabled for manual CAPTCHA solving during login

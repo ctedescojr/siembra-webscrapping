@@ -33,7 +33,7 @@ def resource_path(relative_path):
 # )
 
 # Caminho para o ChromeDriver
-service = Service("C:/DEV/B+P/Siembra/chromedriver-win64/chromedriver.exe")
+service = Service(resource_path("chromedriver-win64/chromedriver.exe"))
 driver = webdriver.Chrome(service=service)
 
 # URL da loja de artigos elétricos
